@@ -23,13 +23,16 @@ namespace YXPHStudios
             };
             var PayloadData = JsonConvert.SerializeObject(Payload);
             var httpContent = new StringContent(PayloadData, Encoding.UTF8, "application/json");
-            var httpResponse = await httpClient.PostAsync(api.ROOTURL + "/auth/login", httpContent);
+            try
+            {
+                var httpResponse = await httpClient.PostAsync(api.ROOTURL + "/auth/login", httpContent);
 
                 if (httpResponse.Content != null)
                 {
                     var responseContent = await httpResponse.Content.ReadAsStringAsync();
                     var ResponseData = JsonConvert.DeserializeObject<LoginResponse>(responseContent);
-                    try { 
+                    try
+                    {
                         if (ResponseData.isSuccess)
                         {
                             Process.Start("Game.exe", $"/app_run U={UserName} P={Password}");
@@ -40,10 +43,16 @@ namespace YXPHStudios
                         {
                             MessageBox.Show("Username or Password is incorrect", "ERROR");
                         }
-                    } catch (Exception e) {
-                            MessageBox.Show($"{e}");
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show($"{e}");
                     }
                 }
+            } catch (Exception e)
+            {
+                MessageBox.Show($"{e}");
+            }
             
         }
     }
